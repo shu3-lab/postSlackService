@@ -10,9 +10,9 @@ import (
 )
 
 type JsonSchema struct {
-	username string `json:"username"`
-	message  string `json:"message"`
-	url      string `json:"url"`
+	Username string `json:"username"`
+	Message  string `json:"message"`
+	Url      string `json:"url"`
 }
 
 func main() {
@@ -33,13 +33,12 @@ func slackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	slack := new(postSlack.Slack)
-	slack.SetUsername(data.username)
-	slack.SetMessage(data.message)
-	slack.SetUrl(data.url)
-
+	slack.SetUsername(data.Username)
+	slack.SetMessage(data.Message)
+	slack.SetUrl(data.Url)
 	err = postSlack.HttpPost(slack)
 	if err != nil {
-		fmt.Printf("Error is occured!")
+		fmt.Println("Error is occured!", err)
 	} else {
 		fmt.Printf("Success!")
 	}

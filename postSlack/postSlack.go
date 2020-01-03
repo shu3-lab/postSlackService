@@ -2,6 +2,8 @@ package postSlack
 
 import (
 	"bytes"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -24,7 +26,8 @@ func (slack *Slack) SetUrl(url string) {
 }
 
 func HttpPost(slackEntity *Slack) error {
-	jsonStr := `"payload={"username": "` + slackEntity.Username + `","text": ` + slackEntity.Message + `}`
+	jsonStr := `"payload={"username": "` + slackEntity.Username + `","text": "` + slackEntity.Message + `"}"`
+	println(jsonStr)
 	url := slackEntity.Url
 	req, err := http.NewRequest(
 		"POST",
@@ -38,11 +41,15 @@ func HttpPost(slackEntity *Slack) error {
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
-	resp, err := client.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
+	defer res.Body.Close()
+	body, bErr := ioutil.ReadAll(res.Body)
+	if bErr != nil {
+		fmt.Println(bErr)
+	}
+	fmt.Println("Slack's response is " + string(body))
 	return err
 }
