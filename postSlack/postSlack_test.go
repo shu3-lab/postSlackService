@@ -21,4 +21,12 @@ func TestSetMessage(t *testing.T) {
 	slack := new(Slack)
 	slack.SetMessage("hello")
 	assert.Equal(t, slack.Message, "hello")
+	t.Log("終了")
+}
+
+func TestSetUrl(t *testing.T) {
+	slack := new(Slack)
+	slack.SetUrl("http://XXX")
+	assert.Equal(t, slack.Url, "http://XXX")
+	t.Log("終了")
 }
