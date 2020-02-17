@@ -38,8 +38,23 @@ func slackHandler(w http.ResponseWriter, r *http.Request) {
 	slack.SetUrl(data.Url)
 	err = postSlack.HttpPost(slack)
 	if err != nil {
-		fmt.Println("Error is occured!", err)
+		responseWithError(w, http.StatusBadRequest, "Invalid request.")
 	} else {
-		fmt.Printf("Success!")
+		responseWithSucess(w)
 	}
+}
+
+func responseWithJson(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
+}
+
+func responseWithError(w http.ResponseWriter, code int, msg string) {
+	responseWithJson(w, code, map[string]string{"error": msg})
+}
+
+func responseWithSucess(w http.ResponseWriter) {
+	responseWithJson(w, http.StatusOK, nil)
 }
